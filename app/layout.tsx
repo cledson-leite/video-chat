@@ -4,6 +4,7 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import NavBar from "@/components/NavBar";
 import Container from "@/components/Container";
+import { SocketProvider } from "@/context/SocketContext";
 
 const playwrite = Playwrite_HU({
   display: "swap",
@@ -25,12 +26,14 @@ export default function RootLayout({
         <body
           className={`${playwrite.className} antialiased`}
         >
-          <main className="flex min-h-screen flex-col bg-secondary">
-            <NavBar />
-            <Container>
-              {children}
-            </Container>
-          </main>
+          <SocketProvider>
+            <main className="flex min-h-screen flex-col bg-secondary">
+              <NavBar />
+              <Container>
+                {children}
+              </Container>
+            </main>
+          </SocketProvider>
         </body>
       </ClerkProvider>
     </html>
