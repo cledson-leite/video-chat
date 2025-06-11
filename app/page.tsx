@@ -1,7 +1,11 @@
-import Image from "next/image";
+import CallNotification from "@/components/CallNotification";
+import ListOnlineUsers from "@/components/ListOnlineUsers";
 
 export default function Home() {
   return (
-    <div>Video Chat</div>
+    <div>
+      <ListOnlineUsers />
+      <CallNotification />
+    </div>
   );
 }

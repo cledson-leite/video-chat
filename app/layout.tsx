@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
-import { Playwrite_HU } from "next/font/google";
+import { Gochi_Hand } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import NavBar from "@/components/NavBar";
 import Container from "@/components/Container";
 import { SocketProvider } from "@/context/SocketContext";
+import { cn } from "@/lib/utils";
 
-const playwrite = Playwrite_HU({
-  display: "swap",
+const gochi = Gochi_Hand({
+  weight: "400",
+  subsets: ["latin"],
+  display: "auto",
 });
 
 export const metadata: Metadata = {
@@ -24,7 +27,7 @@ export default function RootLayout({
     <html lang="pt-br">
       <ClerkProvider>
         <body
-          className={`${playwrite.className} antialiased`}
+          className={cn(`${gochi.className} antialiased relative`)}
         >
           <SocketProvider>
             <main className="flex min-h-screen flex-col bg-secondary">
