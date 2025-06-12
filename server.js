@@ -8,14 +8,15 @@ const port = 3000;
 const app = next({ dev, hostname, port });
 const handler = app.getRequestHandler();
 
-app.prepare().then(() => {
+app.prepare().then(() => { 
+
   const httpServer = createServer(handler);
 
   const io = new Server(httpServer);
 
   const onlineUsers = []
   io.on("connection", (socket) => {
-    socket.on("join-room", (user) => {
+    socket.on("create-room", (user) => {
       if(!user) return
       const isExist = onlineUsers.some(userOnline => userOnline.id === user.id)
       if(isExist) return
@@ -34,9 +35,27 @@ app.prepare().then(() => {
    })
 
    socket.on("call", (participants) => {
-    console.log(participants.destino.profile.firstName)
     io.to(participants.destino.socketId).emit("incomingCall", participants)
    })
+
+    socket.on('webRTCSignal', (data) => {
+      const socketId = data.isCaller 
+        ? data.onGoingCall?.participants?.destino.socketId 
+        : data.onGoingCall?.participants?.origem.socketId
+      if(!socketId) return
+      io.to(socketId).emit('webRTCSignal', data)
+    })
+
+    socket.on('hangup', (data) => {
+      const socketId = data?.onGoinCall?.participants.origem.socketId === data?.userHangingupId
+        ? data.onGoinCall?.participants?.destino.socketId 
+        : data.onGoinCall?.participants?.origem.socketId
+
+      console.log(socketId, data.onGoinCall?.participants?.destino.socketId)
+      
+      if(!socketId) return
+      io.to(socketId).emit('hangup')
+    })
   });
 
   httpServer
